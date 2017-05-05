@@ -112,6 +112,9 @@ prepare() {
 
   msg2 "msys2-mingw-folders-bootstrap.patch"
   patch -p1 -i ${srcdir}/msys2-mingw-folders-bootstrap.patch
+
+  msg2 "boost-1.64.0-process-Fix-exe-with-a-space.patch"
+  patch -p1 -i ${srcdir}/boost-1.64.0-process-Fix-exe-with-a-space.patch
 }
 
 build() {
