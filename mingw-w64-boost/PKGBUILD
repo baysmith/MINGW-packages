@@ -34,7 +34,8 @@ source=(https://downloads.sourceforge.net/sourceforge/boost/boost_${_boostver}.t
         boost-1.64-default-python.patch
         boost-include-intrin-h-on-mingw-w64.patch
         using-mingw-w64-python.patch
-        msys2-mingw-folders-bootstrap.patch)
+        msys2-mingw-folders-bootstrap.patch
+        boost-1.64.0-process-Fix-exe-with-a-space.patch)
 sha256sums=('7bcc5caace97baa948931d712ea5f37038dbb1c5d89b43ad4def4ed7cb683332'
             'c5eae6354693c6b4e6364d4cf6f06c6c3de4c28486bf812cbd291f4410126cf8'
             'f32d189cc661e9b843cf0a3c1528de41aaf4f1ea69d6150b5bcd0a2525d36424'
@@ -51,7 +52,8 @@ sha256sums=('7bcc5caace97baa948931d712ea5f37038dbb1c5d89b43ad4def4ed7cb683332'
             'bbfa002a78d5fdd503b5b97cdc0e367f8e145f514079d95bfd6318fcffefbda4'
             '9a269375b8eb262b93fb18ea6b2ac8c97b16fb71b8bab900faa4c2df2816f2eb'
             '0dd6346d369850aad13bf8d9bc2f0abc16d4b0586e34d61fab11f65d3d7fa9d4'
-            '81f74c2eafbe004bcbb863cc3cd74571adcffed1169dde86645db4441be236e1')
+            '81f74c2eafbe004bcbb863cc3cd74571adcffed1169dde86645db4441be236e1'
+            '00e96ad9a7f7581366c1e0c75bb8b97aa28c11aa30784ea8bd8a34406b317ca8')
 
 prepare() {
   cd "${srcdir}/boost_${_boostver}"
@@ -118,6 +120,9 @@ prepare() {
 
   msg2 "msys2-mingw-folders-bootstrap.patch"
   patch -p1 -i ${srcdir}/msys2-mingw-folders-bootstrap.patch
+
+  msg2 "boost-1.64.0-process-Fix-exe-with-a-space.patch"
+  patch -p1 -i ${srcdir}/boost-1.64.0-process-Fix-exe-with-a-space.patch
 }
 
 build() {
