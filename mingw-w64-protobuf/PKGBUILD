@@ -50,7 +50,7 @@ build() {
       --prefix="${MINGW_PREFIX}" \
       --build="${MINGW_CHOST}" \
       --host="${MINGW_CHOST}" \
-      --enable-shared
+      --enable-static
 
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
   ${MINGW_PREFIX}/bin/cmake \
@@ -60,7 +60,7 @@ build() {
       -DCMAKE_BUILD_TYPE="Release" \
       -DCMAKE_SKIP_RPATH="ON" \
       -Dprotobuf_MSVC_STATIC_RUNTIME="ON" \
-      -DBUILD_SHARED_LIBS="ON" \
+      -DBUILD_SHARED_LIBS="OFF" \
       -Dprotobuf_BUILD_TESTS="OFF" \
       -Dprotobuf_WITH_ZLIB="ON" \
       cmake
