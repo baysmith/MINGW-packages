@@ -6,7 +6,7 @@ pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}-cern-git"
          "${MINGW_PACKAGE_PREFIX}-clang-cern-git"
          "${MINGW_PACKAGE_PREFIX}-clang-analyzer-cern-git"
          "${MINGW_PACKAGE_PREFIX}-llvm-cern-git")
-pkgver=2518.6383df2
+pkgver=4118.50a79561
 pkgrel=1
 clingver=cling-patches-r214630
 pkgdesc="LC language family frontend for LLVM (mingw-w64)"
@@ -25,7 +25,8 @@ source=("llvm-cern"::"git+http://root.cern.ch/git/llvm.git#tag=$clingver"
         "0001-change-all-WIN32-defines-to-_WIN32-as-it-is-a-compil.patch"
         "0002-Invoke-bash-when-looking-for-gcc-includes.patch"
         "0003-use-size_t-for-void-pointer-cast.patch"
-        "0004-Hack-around-missing-functions.patch")
+        "0004-Hack-around-missing-functions.patch"
+        "IntrusiveRefCntPtr.patch")
 
 sha256sums=('SKIP'
             'SKIP'
@@ -34,12 +35,13 @@ sha256sums=('SKIP'
             '9f6fb235834feeec2d2ab03bef81cd1dcafa37ef7553224a17045f045b60a24c'
             'feeacdfdf6586bf9dd43f64ba60746af52c468c7f7dca07b48453b28ebb2c6a8'
             '40f37bf1146cc17722b43b3b67a40824d4300305beb4e750e4f5fa057f012237'
-            '25074103748b8f2ca531fcaddc24ec705c485649d3f0ea7cd672466cc1f6de9a')
+            '25074103748b8f2ca531fcaddc24ec705c485649d3f0ea7cd672466cc1f6de9a'
+            '4a695b4f254c3883f499afe119899b9e31fef30f9f728f249f0538761f80347a')
 
 pkgver() {
   cd "$srcdir/../cling/"
-  local ver="$(git rev-parse HEAD)"
-  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  local ver="$(git rev-parse HEAD --)"
+  printf "%s.%s" "$(git rev-list --count HEAD --)" "$(git rev-parse --short HEAD --)"
 }
 
 prepare() {
@@ -60,6 +62,9 @@ prepare() {
   cd "${srcdir}"
   mv "${srcdir}/clang-cern" "${srcdir}/llvm-cern/tools/clang"
   mv "${srcdir}/cling" "${srcdir}/llvm-cern/tools/cling"
+
+  cd "${srcdir}/llvm-cern"
+  patch -p1 -i ${srcdir}/IntrusiveRefCntPtr.patch
 }
 
 build() {
@@ -92,8 +97,8 @@ package_clang(){
   provides=("${MINGW_PACKAGE_PREFIX}-clang")
   conflicts=("${MINGW_PACKAGE_PREFIX}-clang")
   cd "${srcdir}/llvm-cern/tools/clang"
-  local ver="$(git rev-parse HEAD)"
-  pkgver="r$(git rev-list --count HEAD)"
+  local ver="$(git rev-parse HEAD --)"
+  pkgver="r$(git rev-list --count HEAD --)"
 
   cd "${srcdir}/llvm-cern/build-${MINGW_CHOST}/tools/clang"
   make -j1 DESTDIR="$pkgdir" install
@@ -106,8 +111,8 @@ package_cling(){
   provides=("${MINGW_PACKAGE_PREFIX}-cling")
   conflicts=("${MINGW_PACKAGE_PREFIX}-cling")
   cd "${srcdir}/llvm-cern/tools/cling"
-  local ver="$(git rev-parse HEAD)"
-  pkgver="r$(git rev-list --count HEAD)"
+  local ver="$(git rev-parse HEAD --)"
+  pkgver="r$(git rev-list --count HEAD --)"
 
   cd "${srcdir}/llvm-cern/build-${MINGW_CHOST}/tools/cling"
   make -j1 DESTDIR="$pkgdir" install
@@ -123,8 +128,8 @@ package_llvm(){
   provides=("${MINGW_PACKAGE_PREFIX}-llvm")
   conflicts=("${MINGW_PACKAGE_PREFIX}-llvm")
   cd ${srcdir}/llvm-cern
-  local ver="$(git rev-parse HEAD)"
-  pkgver="r$(git rev-list --count HEAD)"
+  local ver="$(git rev-parse HEAD --)"
+  pkgver="r$(git rev-list --count HEAD --)"
 
   mv "${srcdir}/llvm-cern/tools/clang" "${srcdir}/clang-cern"
   mv "${srcdir}/llvm-cern/build-${MINGW_CHOST}/tools/clang" "${srcdir}/clang-${MINGW_CHOST}"
@@ -151,8 +156,8 @@ package_clang-analyzer() {
   provides=("${MINGW_PACKAGE_PREFIX}-clang-analyzer")
   conflicts=("${MINGW_PACKAGE_PREFIX}-clang-analyzer")
   cd "${srcdir}/llvm-cern/tools/clang"
-  local ver="$(git rev-parse HEAD)"
-  pkgver="r$(git rev-list --count HEAD)"
+  local ver="$(git rev-parse HEAD --)"
+  pkgver="r$(git rev-list --count HEAD --)"
 
   install -d ${pkgdir}${MINGW_PREFIX}/{bin,lib/clang-analyzer}
   for _tool in scan-{build,view}; do
