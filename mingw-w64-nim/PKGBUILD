@@ -15,10 +15,12 @@ makedepends=('git')
 options=(!emptydirs)
 source=("${_realname}-${pkgver}.tar.gz"::https://github.com/nim-lang/Nim/archive/v${pkgver}.tar.gz
         "${_realname}-csources-${pkgver}.tar.gz"::https://github.com/nim-lang/csources/archive/v${pkgver}.tar.gz
-        "0001-Use-unixy-filenames-even-on-Windows.patch")
+        "0001-Use-unixy-filenames-even-on-Windows.patch"
+        "0002-fix-default-lib-path.patch")
 sha256sums=('eb8a98c7e576e8d858de98473569a29c539308fc7bb15a086b3f2b73d675f752'
             '7eb28ba7d5a03d02fc1c1fd9089c037de9c058d327fd6e95d599db63d9afa9c8'
-            '3010acbe7769ea214dd51f5889e3a26b44925001905deb04b060beaede2578f4')
+            '3010acbe7769ea214dd51f5889e3a26b44925001905deb04b060beaede2578f4'
+            '9b67a5cb57da486264519acbd254508890e375ff91bb95b959c398ec0ae953b8')
 
 prepare() {
   cd "${srcdir}"
@@ -28,6 +30,7 @@ prepare() {
 
   cd "${_realname}-${pkgver}"
   patch -p1 -i "${srcdir}/0001-Use-unixy-filenames-even-on-Windows.patch"
+  patch -p1 -i "${srcdir}/0002-fix-default-lib-path.patch"
 }
 
 build() {
@@ -57,10 +60,12 @@ package() {
   export PATH="${srcdir}/${_realname}-${pkgver}/bin:$PATH"
 
   ./koch install "${pkgdir}"
+  ./koch install nimble
 
   mkdir -p "${pkgdir}${MINGW_PREFIX}/bin"
   # mv "${pkgdir}/nim/bin"/* "${pkgdir}${MINGW_PREFIX}/bin/"
   cp "bin/nim.exe" "${pkgdir}${MINGW_PREFIX}/bin/"
+  cp "bin/nimble.exe" "${pkgdir}${MINGW_PREFIX}/bin/"
   cp "tools/nimgrep.exe" "${pkgdir}${MINGW_PREFIX}/bin/"
 
   mkdir -p "${pkgdir}${MINGW_PREFIX}/lib/nim"

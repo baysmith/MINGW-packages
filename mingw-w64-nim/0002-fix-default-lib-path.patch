@@ -1,0 +1,13 @@
+--- Nim-0.17.2-orig/compiler/options.nim	2018-03-17 23:13:39.108625000 -0700
++++ Nim-0.17.2/compiler/options.nim	2018-03-18 00:41:33.271356000 -0700
+@@ -239,6 +239,10 @@
+     if not fileExists(libpath / "system.nim") and
+         fileExists(parentNimlibPath / "system.nim"):
+       libpath = parentNimLibPath
++    else:
++      if not fileExists(libpath / "system.nim") and
++          fileExists(libpath / "nim" / "system.nim"):
++        libpath = libpath / "nim"
+ 
+ proc canonicalizePath*(path: string): string =
+   # on Windows, 'expandFilename' calls getFullPathName which doesn't do
