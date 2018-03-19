@@ -1,0 +1,20 @@
+--- Nim-0.17.2-orig/lib/wrappers/openssl.nim	2017-09-06 23:29:38.000000000 -0700
++++ Nim-0.17.2/lib/wrappers/openssl.nim	2018-03-18 17:54:04.791644600 -0700
+@@ -14,14 +14,9 @@
+ const useWinVersion = defined(Windows) or defined(nimdoc)
+ 
+ when useWinVersion:
+-  when not defined(nimOldDlls) and defined(cpu64):
+-    const
+-      DLLSSLName = "(ssleay64|libssl64).dll"
+-      DLLUtilName = "libeay64.dll"
+-  else:
+-    const
+-      DLLSSLName = "(ssleay32|libssl32).dll"
+-      DLLUtilName = "libeay32.dll"
++  const
++    DLLSSLName = "(ssleay32|libssl32).dll"
++    DLLUtilName = "libeay32.dll"
+ 
+   from winlean import SocketHandle
+ else:
